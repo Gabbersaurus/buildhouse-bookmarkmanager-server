@@ -1,8 +1,8 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from 'typeorm';
-import {User} from './User';
+import User from './User';
 
 @Entity()
-export class Bookmark {
+export default class Bookmark {
     @PrimaryGeneratedColumn()
     id!: number;
 

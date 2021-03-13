@@ -11,6 +11,14 @@ const typeDefs = gql`
     type Query {
         bookmarks: [Bookmark]
     }
+
+    type Authentication {
+        token: String!
+    }
+
+    type Mutation {
+        authenticate(username: String!, password: String!): Authentication
+    }
 `;
 
 export default typeDefs;

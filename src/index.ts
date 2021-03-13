@@ -1,21 +1,29 @@
-import {ApolloServer} from 'apollo-server';
+import 'reflect-metadata';
+import {ApolloServer, AuthenticationError} from 'apollo-server';
 import typeDefs from '@/graphQL/typeDefs';
 import resolvers from '@/graphQL/resolvers';
 import {config} from 'dotenv';
 import Context from './context';
+import {createConnection} from 'typeorm';
+import ConnectionContainer from './ConnectionContainer';
 
 const start = async () => {
+    //Load config
     config();
 
+    //Validate config
+    if (!process.env.Secret) {
+        throw new Error('Secret key not set');
+    }
+
+    //Load database
+    ConnectionContainer.connection = await createConnection();
+
+    //Create Apollo server
     const server = new ApolloServer({
         typeDefs,
         resolvers,
-        context({req}) {
-            const userId: number | null = null;
-            const token = req.headers.authorization || '';
-
-            return new Context(userId);
-        },
+        context: ({req}) => Context.create(req.headers.authorization || ''),
     });
 
     const info = await server.listen({

@@ -1,8 +1,8 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from 'typeorm';
-import {Bookmark} from './Bookmark';
+import Bookmark from './Bookmark';
 
 @Entity()
-export class User {
+export default class User {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -13,11 +13,10 @@ export class User {
     password: string;
 
     @OneToMany(() => Bookmark, (bookmark) => bookmark.user)
-    bookmarks: Bookmark[];
+    bookmarks!: Bookmark[];
 
     constructor(username: string, password: string) {
         this.username = username;
         this.password = password;
-        this.bookmarks = [];
     }
 }

@@ -1,15 +1,15 @@
+import ConnectionContainer from '@/ConnectionContainer';
 import Context from '@/context';
-import Bookmark from '@/types/Bookmark';
+import Bookmark from '@/entities/Bookmark';
 
-export default (
+export default async (
     _: any,
     args: Record<string, never>,
     context: Context,
-): Bookmark[] => [
-    {
-        id: context.userId ?? 1515,
-        name: 'test',
-        url: 'test',
-        order: 0,
-    },
-];
+): Promise<Bookmark[]> => {
+    context.requireLogin();
+
+    return await ConnectionContainer.connection.getRepository(Bookmark).find({
+        where: {user: {id: context.user?.id}},
+    });
+};

@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "experimentalDecorators": true,
         "target": "es5",
         "module": "commonjs",
         "lib": ["es6"],
@@ -16,6 +15,8 @@
         "paths": {
             "@/*": ["src/*"]
         },
-        "typeRoots": ["./node_modules/@types", "./src/typings"]
+        "typeRoots": ["./node_modules/@types", "./src/typings"],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     }
 }
