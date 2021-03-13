@@ -11,5 +11,8 @@ export default async (
 
     return await ConnectionContainer.connection.getRepository(Bookmark).find({
         where: {user: {id: context.user?.id}},
+        order: {
+            order: 'ASC',
+        },
     });
 };

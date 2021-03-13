@@ -1,7 +1,7 @@
 import {AuthenticationError} from 'apollo-server';
 import User from './entities/User';
-import jsonwebtoken from 'jsonwebtoken';
 import ConnectionContainer from './ConnectionContainer';
+import {verify} from '@/helpers/jwt';
 
 export default class Context {
     private _user: User | undefined = undefined;
@@ -17,16 +17,13 @@ export default class Context {
 
         if (token.length) {
             try {
-                const decoded = jsonwebtoken.verify(
-                    token,
-                    process.env.SECRET ?? '',
-                ) as {data: number};
+                const id = verify(token);
 
                 user = await ConnectionContainer.connection
                     .getRepository(User)
                     .findOne({
                         where: {
-                            id: decoded.data,
+                            id,
                         },
                     });
             } catch {
