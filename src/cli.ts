@@ -2,7 +2,8 @@ import bcrypt from 'bcrypt';
 import User from '@/entities/User';
 import constants from '@/constants';
 import {createConnection} from 'typeorm';
-import Bookmark from '@/entities/Bookmark';
+import crypto from 'crypto';
+import base64url from 'base64url';
 
 const createUser = async (args: string[]): Promise<void> => {
     if (args.length < 2) {
@@ -25,26 +26,37 @@ const createUser = async (args: string[]): Promise<void> => {
     console.log('Added user');
 };
 
-const testAddBookmarks = async (args: string[]): Promise<void> => {
+const deleteUser = async (args: string[]): Promise<void> => {
+    if (args.length < 1) {
+        console.error('Command structure: `delete-user {username}');
+        return;
+    }
+
     const username = args[0];
     const connection = await createConnection();
-
     const user = await connection
         .getRepository(User)
         .findOne({where: {username}});
 
-    if (user) {
-        await connection
-            .getRepository(Bookmark)
-            .save([
-                new Bookmark('test1', 'test1', 0, user),
-                new Bookmark('test2', 'test2', 1, user),
-                new Bookmark('test3', 'test3', 2, user),
-                new Bookmark('test4', 'test4', 3, user),
-            ]);
+    if (!user) {
+        console.error('User does not exist');
+        return;
     }
 
-    console.log('Added bookmarks');
+    await connection.getRepository(User).remove(user);
+
+    console.log('Removed user');
+};
+
+const generateSecret = async (args: string[]): Promise<void> => {
+    let length = 48;
+
+    if (args.length > 0) {
+        length = parseInt(args[0]);
+    }
+
+    console.log(base64url(crypto.randomBytes(length)));
+    console.log('You have to manually set it in the .env file!');
 };
 
 const cli = async (args: string[]): Promise<void> => {
@@ -60,8 +72,10 @@ const cli = async (args: string[]): Promise<void> => {
     switch (command) {
         case 'create-user':
             return await createUser(args);
-        case 'test':
-            return await testAddBookmarks(args);
+        case 'delete-user':
+            return await deleteUser(args);
+        case 'generate-secret':
+            return await generateSecret(args);
         default:
             console.error('Command not found');
     }

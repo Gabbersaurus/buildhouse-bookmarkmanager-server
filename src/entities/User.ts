@@ -12,7 +12,9 @@ export default class User {
     @Column()
     password: string;
 
-    @OneToMany(() => Bookmark, (bookmark) => bookmark.user)
+    @OneToMany(() => Bookmark, (bookmark) => bookmark.user, {
+        onDelete: 'CASCADE',
+    })
     bookmarks!: Bookmark[];
 
     constructor(username: string, password: string) {
