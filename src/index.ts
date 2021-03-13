@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import {ApolloServer, AuthenticationError} from 'apollo-server';
+import {ApolloServer} from 'apollo-server';
 import typeDefs from '@/graphQL/typeDefs';
 import resolvers from '@/graphQL/resolvers';
 import {config} from 'dotenv';
