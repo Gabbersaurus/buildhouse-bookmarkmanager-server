@@ -3,7 +3,7 @@ import {ApolloServer} from 'apollo-server';
 import typeDefs from '@/graphQL/typeDefs';
 import resolvers from '@/graphQL/resolvers';
 import {config} from 'dotenv';
-import Context from './context';
+import Context from './Context';
 import {createConnection} from 'typeorm';
 import ConnectionContainer from './ConnectionContainer';
 

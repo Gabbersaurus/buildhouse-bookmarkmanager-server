@@ -4,6 +4,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import Authentication from '@/types/Authentication';
 import User from '@/entities/User';
 import {AuthenticationError} from 'apollo-server';
+import {sign} from '@/helpers/jwt';
 
 export default async (
     _: any,
@@ -24,17 +25,7 @@ export default async (
         throw new AuthenticationError('Username or password invalid');
     }
 
-    const token = jsonwebtoken.sign(
-        {
-            exp:
-                Math.floor(Date.now() / 1000) +
-                parseInt(process.env.JWTEXPIRE ?? '86400'),
-            data: user.id,
-        },
-        process.env.SECRET ?? '',
-    );
-
     return {
-        token,
+        token: sign(user.id),
     };
 };
