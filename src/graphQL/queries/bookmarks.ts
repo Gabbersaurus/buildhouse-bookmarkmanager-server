@@ -1,5 +1,5 @@
 import ConnectionContainer from '@/ConnectionContainer';
-import Context from '@/context';
+import Context from '@/Context';
 import Bookmark from '@/entities/Bookmark';
 
 export default async (
