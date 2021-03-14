@@ -12,7 +12,7 @@ const start = async () => {
     config();
 
     //Validate config
-    if (!process.env.Secret) {
+    if (!process.env.SECRET) {
         throw new Error('Secret key not set');
     }
 
