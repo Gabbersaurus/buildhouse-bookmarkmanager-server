@@ -5,6 +5,7 @@ const typeDefs = gql`
         id: Int
         name: String
         url: String
+        favicon: String
         order: Int
     }
 
@@ -27,6 +28,7 @@ const typeDefs = gql`
     type Mutation {
         authenticate(username: String!, password: String!): Authentication
         setBookmarks(bookmarks: [BookmarkInput]!): Boolean
+        resetFavicons: Boolean
     }
 `;
 

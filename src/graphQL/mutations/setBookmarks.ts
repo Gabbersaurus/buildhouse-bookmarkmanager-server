@@ -1,13 +1,14 @@
 import ConnectionContainer from '@/ConnectionContainer';
 import Context from '@/Context';
-import BookmarkType from '@/types/Bookmark';
+import BookmarkInput from '@/types/BookmarkInput';
 import Bookmark from '@/entities/Bookmark';
 import User from '@/entities/User';
 import {In, Not} from 'typeorm';
+import getFavicon from '@/helpers/getFavicon';
 
 export default async (
     _: any,
-    args: {bookmarks: BookmarkType[]},
+    args: {bookmarks: BookmarkInput[]},
     context: Context,
 ): Promise<boolean> => {
     context.requireLogin();
@@ -16,7 +17,7 @@ export default async (
     const toSave: Bookmark[] = [];
 
     for (const bookmark of args.bookmarks) {
-        if (bookmark.id > 0) {
+        if (bookmark.id >= 0) {
             //If id is given, update
             const bookmarkToUpdate = await ConnectionContainer.connection
                 .getRepository(Bookmark)
@@ -26,6 +27,10 @@ export default async (
                 bookmarkToUpdate &&
                 bookmarkToUpdate?.user.id == context.user?.id
             ) {
+                if (bookmarkToUpdate.url != bookmark.url) {
+                    bookmarkToUpdate.favicon = await getFavicon(bookmark.url);
+                }
+
                 bookmarkToUpdate.name = bookmark.name;
                 bookmarkToUpdate.url = bookmark.url;
                 bookmarkToUpdate.order = bookmark.order;
@@ -39,6 +44,7 @@ export default async (
                 new Bookmark(
                     bookmark.name,
                     bookmark.url,
+                    await getFavicon(bookmark.url),
                     bookmark.order,
                     context.user as User,
                 ),
@@ -60,9 +66,11 @@ export default async (
         return bookmark.id;
     });
 
-    await ConnectionContainer.connection
-        .getRepository(Bookmark)
-        .delete(toDelete);
+    if (toDelete.length > 0) {
+        await ConnectionContainer.connection
+            .getRepository(Bookmark)
+            .delete(toDelete);
+    }
 
     //Save new and updated
     await ConnectionContainer.connection.getRepository(Bookmark).save(toSave);
