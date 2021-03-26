@@ -15,5 +15,6 @@ More information about Buildhouse Bookmark Manager can be found in the [Gabbersa
 -   Run `yarn migration:run` to create the database tables.
 -   Create a user by running `yarn cli create-user {username} {password}.
     -   A user can be removed by running `yarn cli delete-user {username}`
--   (optional) Add backgrounds to the `./backgrounds/` folder.
+-   Create the `./favicons` folder.
+-   Create the `./backgrounds` folder. You can add images to this folder, but it's not required.
 -   Start the server by running `yarn start`. The server can now be used in the client.

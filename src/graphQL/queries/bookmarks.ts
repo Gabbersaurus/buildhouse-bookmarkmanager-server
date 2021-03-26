@@ -21,12 +21,14 @@ export default async (
         });
 
     for (const bookmark of bookmarks) {
-        bookmark.favicon = `${bookmark.favicon}?${
-            constants.faviconTokenQuery
-        }=${sign<string>(
-            bookmark.favicon,
-            parseInt(process.env.FAVICONEXPIRE ?? '30'),
-        )}`;
+        if (bookmark.favicon) {
+            bookmark.favicon = `${bookmark.favicon}?${
+                constants.faviconTokenQuery
+            }=${sign<string>(
+                bookmark.favicon,
+                parseInt(process.env.FAVICONEXPIRE ?? '30'),
+            )}`;
+        }
     }
 
     return bookmarks;

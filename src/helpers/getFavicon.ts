@@ -23,12 +23,16 @@ const promisifyStream = (stream: fs.WriteStream) => {
 const getExtension = (path: string) => {
     const index = path.lastIndexOf('.');
 
-    return index < 0 ? '' : path.substr(index);
+    return index < 0 ? '' : path.substr(index).split(/[?#]/)[0];
 };
 
 export default async (url: string): Promise<string> => {
     try {
-        const {body: html, url: gotUrl} = await got(url);
+        const {body: html, url: gotUrl} = await got(url, {
+            https: {
+                rejectUnauthorized: false,
+            },
+        });
         const metadata = ((await metascraper([metascraperLogoFavicon()])({
             html,
             url: gotUrl,
@@ -44,7 +48,9 @@ export default async (url: string): Promise<string> => {
                 `./${constants.faviconsFolder}/${returnUrl}`,
             );
 
-            request(metadata.logo).pipe(stream);
+            request(metadata.logo, {
+                rejectUnauthorized: false,
+            }).pipe(stream);
             await promisifyStream(stream);
 
             return returnUrl;
