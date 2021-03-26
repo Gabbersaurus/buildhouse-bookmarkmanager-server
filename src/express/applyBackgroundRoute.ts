@@ -22,6 +22,9 @@ export default (app: Express): void => {
 
         res.sendFile(
             path.join(backgroundsFolder, backgrounds[index]),
+            {
+                maxAge: `${refreshDays} days`,
+            },
             function (err) {
                 if (err) {
                     res.status(500).send({error: 'File not found'});
