@@ -21,7 +21,9 @@ export default async (
         bookmark.favicon = await getFavicon(bookmark.url);
     }
 
-    //SAVE!
+    await ConnectionContainer.connection
+        .getRepository(Bookmark)
+        .save(bookmarks);
 
     return true;
 };

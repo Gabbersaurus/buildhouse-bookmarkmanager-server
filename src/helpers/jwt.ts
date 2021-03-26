@@ -1,25 +1,27 @@
 import jsonwebtoken from 'jsonwebtoken';
 
-const sign = (id: number | undefined): string => {
+const sign = <T>(toSign: T, expiresIn: number): string => {
+    return jsonwebtoken.sign(
+        {
+            data: toSign,
+        },
+        process.env.SECRET ?? '',
+        {expiresIn},
+    );
+};
+
+const signID = (id: number | undefined): string => {
     if (id == undefined) {
         throw new Error('Invalid user ID');
     }
 
-    return jsonwebtoken.sign(
-        {
-            exp:
-                Math.floor(Date.now() / 1000) +
-                parseInt(process.env.JWTEXPIRE ?? '86400'),
-            data: id,
-        },
-        process.env.SECRET ?? '',
-    );
+    return sign<number>(id, parseInt(process.env.JWTEXPIRE ?? '86400'));
 };
 
-const verify = (token: string): number => {
+const verify = <T>(token: string): T => {
     return (jsonwebtoken.verify(token, process.env.SECRET ?? '') as {
-        data: number;
+        data: T;
     }).data;
 };
 
-export {sign, verify};
+export {signID, sign, verify};

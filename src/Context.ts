@@ -17,7 +17,7 @@ export default class Context {
 
         if (token.length) {
             try {
-                const id = verify(token);
+                const id = verify<number>(token);
 
                 user = await ConnectionContainer.connection
                     .getRepository(User)

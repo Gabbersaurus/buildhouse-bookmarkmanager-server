@@ -1,4 +1,4 @@
-import {sign} from '@/helpers/jwt';
+import {signID} from '@/helpers/jwt';
 import Authentication from '@/types/Authentication';
 import Context from '@/Context';
 
@@ -9,7 +9,7 @@ export default async (
 ): Promise<Authentication> => {
     context.requireLogin();
 
-    const token = sign(context.user?.id);
+    const token = signID(context.user?.id);
 
     return {
         token,

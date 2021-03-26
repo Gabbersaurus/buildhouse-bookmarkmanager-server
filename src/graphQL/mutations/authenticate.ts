@@ -4,7 +4,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import Authentication from '@/types/Authentication';
 import User from '@/entities/User';
 import {AuthenticationError} from 'apollo-server';
-import {sign} from '@/helpers/jwt';
+import {signID} from '@/helpers/jwt';
 
 export default async (
     _: any,
@@ -26,6 +26,6 @@ export default async (
     }
 
     return {
-        token: sign(user.id),
+        token: signID(user.id),
     };
 };

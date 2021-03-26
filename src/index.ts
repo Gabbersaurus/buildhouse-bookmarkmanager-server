@@ -1,11 +1,14 @@
 import 'reflect-metadata';
-import {ApolloServer} from 'apollo-server';
+import express from 'express';
+import {ApolloServer} from 'apollo-server-express';
 import typeDefs from '@/graphQL/typeDefs';
 import resolvers from '@/graphQL/resolvers';
 import {config} from 'dotenv';
 import Context from './Context';
 import {createConnection} from 'typeorm';
 import ConnectionContainer from './ConnectionContainer';
+import applyFaviconRoute from './express/applyFaviconRoute';
+import applyCatchError from './express/applyCatchError';
 
 const start = async () => {
     //Load config
@@ -19,18 +22,25 @@ const start = async () => {
     //Load database
     ConnectionContainer.connection = await createConnection();
 
-    //Create Apollo server
+    //Create Express & Apollo server
+    const app = express();
     const server = new ApolloServer({
         typeDefs,
         resolvers,
         context: ({req}) => Context.create(req.headers.authorization || ''),
     });
 
-    const info = await server.listen({
+    server.applyMiddleware({app});
+    applyFaviconRoute(app);
+    applyCatchError(app);
+
+    await app.listen({
         port: process.env.PORT,
     });
 
-    console.log(`Bookmarkmanager ready at ${info.url}`);
+    console.log(
+        `Bookmarkmanager ready at http://localhost:` + process.env.PORT,
+    );
 };
 
 void start();
