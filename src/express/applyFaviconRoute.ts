@@ -28,6 +28,11 @@ export default (app: Express): void => {
                 ),
                 `${constants.faviconsFolder}${path.sep}${file}`,
             ),
+            function (err) {
+                if (err) {
+                    res.status(500).send({error: 'File not found'});
+                }
+            },
         );
     });
 };

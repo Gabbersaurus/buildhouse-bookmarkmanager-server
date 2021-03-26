@@ -9,6 +9,7 @@ import {createConnection} from 'typeorm';
 import ConnectionContainer from './ConnectionContainer';
 import applyFaviconRoute from './express/applyFaviconRoute';
 import applyCatchError from './express/applyCatchError';
+import applyBackgroundRoute from './express/applyBackgroundRoute';
 
 const start = async () => {
     //Load config
@@ -32,6 +33,7 @@ const start = async () => {
 
     server.applyMiddleware({app});
     applyFaviconRoute(app);
+    applyBackgroundRoute(app);
     applyCatchError(app);
 
     await app.listen({
