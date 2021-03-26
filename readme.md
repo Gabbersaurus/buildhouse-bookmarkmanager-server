@@ -11,7 +11,9 @@ More information about Buildhouse Bookmark Manager can be found in the [Gabbersa
     -   Enter the secret key for the authentication token on in the `SECRET` value. It can be generated with `yarn cli generate-secret`.
     -   Enter the authentication expire time in the `AUTHEXPIRE` value. The time entered is in seconds.
     -   Enter the favicon expire time in the `FAVICONEXPIRE` value. The time entered is in seconds.
+    -   Enter the days before the backgrounds refreshes in the `BACKGROUNDREFRESHDAYS` value.
 -   Run `yarn migration:run` to create the database tables.
 -   Create a user by running `yarn cli create-user {username} {password}.
     -   A user can be removed by running `yarn cli delete-user {username}`
+-   (optional) Add backgrounds to the `./backgrounds/` folder.
 -   Start the server by running `yarn start`. The server can now be used in the client.
