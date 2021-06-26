@@ -27,7 +27,7 @@ export default (app: Express): void => {
             },
             function (err) {
                 if (err) {
-                    res.status(500).send({error: 'File not found'});
+                    res.status(500).end();
                 }
             },
         );

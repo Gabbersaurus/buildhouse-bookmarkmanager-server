@@ -2,9 +2,10 @@ import constants from '@/constants';
 import {verify} from '@/helpers/jwt';
 import {Express} from 'express';
 import path from 'path';
+import fs from 'fs';
 
 export default (app: Express): void => {
-    app.get('/favicon/:favicon', function (req, res) {
+    app.get('/favicon/:favicon', async function (req, res) {
         if (!req.params.favicon || !req.query.token) {
             throw new Error('Invalid parameters');
         }
@@ -21,18 +22,21 @@ export default (app: Express): void => {
             throw new Error('Token does not match favicon');
         }
 
-        res.sendFile(
-            path.join(
-                path.resolve(
-                    `${__dirname}${path.sep}..${path.sep}..${path.sep}`,
-                ),
-                `${constants.faviconsFolder}${path.sep}${file}`,
-            ),
-            function (err) {
-                if (err) {
-                    res.status(500).send({error: 'File not found'});
-                }
-            },
+        const faviconPath = path.join(
+            path.resolve(`${__dirname}${path.sep}..${path.sep}..${path.sep}`),
+            `${constants.faviconsFolder}${path.sep}${file}`,
         );
+
+        try {
+            await fs.promises.stat(faviconPath);
+        } catch {
+            throw new Error('File not found');
+        }
+
+        res.sendFile(faviconPath, function (err) {
+            if (err) {
+                res.status(500).end();
+            }
+        });
     });
 };
