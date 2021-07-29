@@ -8,7 +8,6 @@ import Context from './Context';
 import {createConnection} from 'typeorm';
 import ConnectionContainer from './ConnectionContainer';
 import applyFaviconRoute from './express/applyFaviconRoute';
-import applyCatchError from './express/applyCatchError';
 import applyBackgroundRoute from './express/applyBackgroundRoute';
 
 const start = async () => {
@@ -34,7 +33,6 @@ const start = async () => {
     server.applyMiddleware({app});
     applyFaviconRoute(app);
     applyBackgroundRoute(app);
-    applyCatchError(app);
 
     await app.listen({
         port: process.env.PORT,
